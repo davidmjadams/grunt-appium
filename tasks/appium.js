@@ -12,21 +12,20 @@ module.exports = function(grunt) {
 
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
-
   grunt.registerMultiTask('appium', 'Grunt plugin for running appium', function() {
+
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({});
-    var appium = {};
+    var appiumPath = require.resolve('appium');
+    var spawn = require('child_process').spawn;
 
-    if (!appium[this.target]) {
-      appium[this.target] = require('./lib/process')(grunt, this.target);
-    }
+    var child = spawn('node', [appiumPath], function (err) {
+        console.log(err);
+    });
 
-    var instance = appium[this.target];
-    var action  = this.flags.stop ? 'stop' : 'start';
-
-    instance[action](options, process);
-
+    process.on('exit', function(data) {
+        console.log('exit');
+        child.kill("SIGTERM");
+    });
   });
-
 };
