@@ -1,0 +1,33 @@
+/*
+ * grunt-appium
+ * https://github.com/hungrydavid/grunt-appium
+ *
+ * Copyright (c) 2015 David Adams
+ * Licensed under the MIT license.
+ */
+
+'use strict';
+
+module.exports = function(grunt) {
+
+  // Please see the Grunt documentation for more information regarding task
+  // creation: http://gruntjs.com/creating-tasks
+
+  grunt.registerMultiTask('appium', 'Grunt plugin for running appium', function() {
+    // Merge task-specific and/or target-specific options with these defaults.
+    var options = this.options({});
+    var appium = {};
+
+    if (!appium[this.target]) {
+      appium[this.target] = require('./lib/process')(grunt, this.target);
+    }
+
+    var instance = appium[this.target];
+    var action  = this.flags.stop ? 'stop' : 'start';
+    var done = this.async();
+
+    instance[action](options, done);
+
+  });
+
+};
