@@ -1,31 +1,29 @@
 
 module.exports = function (grunt, target, done) {
     var appiumPath = require.resolve('appium');
-    var spawn = require('child_process').spawn;
-
-    if (!process._appium) {
-      process._appium = {};
-    }
+    var spawn = require('child_process').spawn,
+        child;
 
     function killAppium () {
         process._appium[target].kill('SIGTERM');
         process._appium[target] = null;
     }
 
-    function start (options, done) {
-        var child = spawn('node', [appiumPath, '&']);
-        process._appium[target] = child;
+    function start (options, process) {
+
+        child && child.kill();
+
+        child = spawn('node', [appiumPath, '&']);
 
         child.stdout.on('data', function(data) {});
 
-        child.stdout.on('end', function(data) {
-            done();
+        process.on('exit', function(data) {
+            child.kill("SIGTERM");
         });
     }
 
-    function stop (options, done) {
+    function stop (options) {
         killAppium();
-        done();
     }
 
     return {

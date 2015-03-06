@@ -24,9 +24,8 @@ module.exports = function(grunt) {
 
     var instance = appium[this.target];
     var action  = this.flags.stop ? 'stop' : 'start';
-    var done = this.async();
 
-    instance[action](options, done);
+    instance[action](options, process);
 
   });
 
