@@ -25,8 +25,8 @@ module.exports = function(grunt) {
     });
 
     process.on('exit', function(data) {
-        done();
         child.kill("SIGTERM");
+        done();
     });
   });
 };
