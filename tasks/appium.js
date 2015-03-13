@@ -18,13 +18,14 @@ module.exports = function(grunt) {
     var options = this.options({});
     var appiumPath = require.resolve('appium');
     var spawn = require('child_process').spawn;
+    var done = this.async();
 
     var child = spawn('node', [appiumPath], function (err) {
         console.log(err);
     });
 
     process.on('exit', function(data) {
-        console.log('exit');
+        done();
         child.kill("SIGTERM");
     });
   });
